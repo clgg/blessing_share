@@ -13,10 +13,13 @@ class ActivityProvider extends ChangeNotifier {
   final AppStorage _storage;
   final DateTime Function() _clock;
   final List<ActivityRecord> _records = [];
+  Future<void>? _loadOperation;
 
   List<ActivityRecord> get records => List.unmodifiable(_records);
 
-  Future<void> load() async {
+  Future<void> load() => _loadOperation ??= _loadFromStorage();
+
+  Future<void> _loadFromStorage() async {
     final value = await _storage.readJson(_storageKey);
     final records = value['records'];
     _records
@@ -48,6 +51,7 @@ class ActivityProvider extends ChangeNotifier {
     required ActivityType type,
     ShareTarget? target,
   }) async {
+    await load();
     final createdAt = _clock();
     _records.insert(
       0,

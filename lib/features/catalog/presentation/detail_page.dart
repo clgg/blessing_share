@@ -80,12 +80,17 @@ class _DetailContent extends StatelessWidget {
               ),
               SizedBox.square(
                 dimension: 56,
-                child: IconButton.filledTonal(
-                  tooltip: isFavorite ? '取消收藏' : '收藏',
-                  onPressed: () => _toggleFavorite(context),
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: AppColors.primary,
+                child: Semantics(
+                  button: true,
+                  label: isFavorite ? '取消收藏' : '收藏',
+                  excludeSemantics: true,
+                  child: IconButton.filledTonal(
+                    tooltip: isFavorite ? '取消收藏' : '收藏',
+                    onPressed: () => _toggleFavorite(context),
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ),
@@ -139,10 +144,11 @@ class _DetailContent extends StatelessWidget {
 
   Future<void> _share(BuildContext context, ShareTarget target) async {
     final gateway = context.read<WechatGateway>();
+    final activity = context.read<ActivityProvider>();
     final result = target == ShareTarget.friend
         ? await gateway.shareToFriend(item)
         : await gateway.shareToTimeline(item);
-    await context.read<ActivityProvider>().recordShare(item.id, target);
+    await activity.recordShare(item.id, target);
     if (!context.mounted) return;
     AppToast.show(
       context,

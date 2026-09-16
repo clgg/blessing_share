@@ -64,57 +64,60 @@ abstract final class AppToast {
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 358, minHeight: 64),
-              child: Semantics(
-                container: true,
-                liveRegion: true,
-                label: '${type.label}：$message',
-                excludeSemantics: true,
-                child: Material(
-                  color: type.background,
-                  borderRadius: BorderRadius.circular(16),
-                  elevation: 6,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      border:
-                          Border(left: BorderSide(color: type.color, width: 8)),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      child: Row(
-                        children: [
-                          Icon(type.icon, color: type.color, size: 28),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              message,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: type.color,
-                                fontSize: 18,
-                                height: 1.35,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          if (actionLabel != null && onAction != null)
-                            TextButton(
-                              onPressed: () {
-                                dismiss();
-                                onAction();
-                              },
+              child: IgnorePointer(
+                ignoring: actionLabel == null || onAction == null,
+                child: Semantics(
+                  container: true,
+                  liveRegion: true,
+                  label: '${type.label}：$message',
+                  excludeSemantics: true,
+                  child: Material(
+                    color: type.background,
+                    borderRadius: BorderRadius.circular(16),
+                    elevation: 6,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        border: Border(
+                            left: BorderSide(color: type.color, width: 8)),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        child: Row(
+                          children: [
+                            Icon(type.icon, color: type.color, size: 28),
+                            const SizedBox(width: 12),
+                            Expanded(
                               child: Text(
-                                actionLabel,
+                                message,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: type.color,
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w700,
+                                  height: 1.35,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
-                        ],
+                            if (actionLabel != null && onAction != null)
+                              TextButton(
+                                onPressed: () {
+                                  dismiss();
+                                  onAction();
+                                },
+                                child: Text(
+                                  actionLabel,
+                                  style: TextStyle(
+                                    color: type.color,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

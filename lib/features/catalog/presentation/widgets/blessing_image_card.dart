@@ -49,12 +49,17 @@ class BlessingImageCard extends StatelessWidget {
                       top: 4,
                       child: SizedBox.square(
                         dimension: 52,
-                        child: IconButton.filledTonal(
-                          onPressed: onFavorite,
-                          tooltip: favorite ? '取消收藏' : '收藏',
-                          icon: Icon(
-                            favorite ? Icons.favorite : Icons.favorite_border,
-                            color: AppColors.primary,
+                        child: Semantics(
+                          button: true,
+                          label: favorite ? '取消收藏' : '收藏',
+                          excludeSemantics: true,
+                          child: IconButton.filledTonal(
+                            onPressed: onFavorite,
+                            tooltip: favorite ? '取消收藏' : '收藏',
+                            icon: Icon(
+                              favorite ? Icons.favorite : Icons.favorite_border,
+                              color: AppColors.primary,
+                            ),
                           ),
                         ),
                       ),

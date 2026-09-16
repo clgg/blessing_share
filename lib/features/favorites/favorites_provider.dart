@@ -11,6 +11,7 @@ class FavoritesProvider extends ChangeNotifier {
   final Map<String, String> _categoryById = {};
   String? _filterCategoryId;
   String? _removedId;
+  Future<void>? _loadOperation;
 
   bool contains(String itemId) => _favoriteIds.contains(itemId);
 
@@ -24,7 +25,9 @@ class FavoritesProvider extends ChangeNotifier {
     return List.unmodifiable(ids);
   }
 
-  Future<void> load() async {
+  Future<void> load() => _loadOperation ??= _loadFromStorage();
+
+  Future<void> _loadFromStorage() async {
     final value = await _storage.readJson(_storageKey);
     final ids = value['ids'];
     _favoriteIds
@@ -40,6 +43,7 @@ class FavoritesProvider extends ChangeNotifier {
   }
 
   Future<void> toggle(BlessingItem item) async {
+    await load();
     _categoryById[item.id] = item.categoryId;
     if (_favoriteIds.contains(item.id)) {
       await remove(item.id);
@@ -52,6 +56,7 @@ class FavoritesProvider extends ChangeNotifier {
   }
 
   Future<void> remove(String itemId) async {
+    await load();
     if (!_favoriteIds.remove(itemId)) return;
     _removedId = itemId;
     await _persist();
@@ -59,6 +64,7 @@ class FavoritesProvider extends ChangeNotifier {
   }
 
   Future<void> undoRemove() async {
+    await load();
     final itemId = _removedId;
     if (itemId == null) return;
     _favoriteIds.add(itemId);
