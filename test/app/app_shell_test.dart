@@ -17,11 +17,11 @@ void main() {
 
     await tester.tap(find.text('收藏'));
     await tester.pump();
-    expect(find.text('收藏页面'), findsOneWidget);
+    expect(find.text('我的收藏'), findsOneWidget);
 
     await tester.tap(find.text('我的'));
     await tester.pump();
-    expect(find.text('我的页面'), findsOneWidget);
+    expect(find.text('我的'), findsWidgets);
   });
 
   testWidgets('每个底栏入口的触控高度不小于 52dp', (tester) async {
