@@ -1,0 +1,22 @@
+{
+  "categories": [
+    {"id":"daily","name":"日常问候","subtitle":"早安 午安 晚安","coverAsset":"assets/images/daily.jpg","sortOrder":1},
+    {"id":"birthday","name":"生日祝福","subtitle":"家人 朋友 长辈","coverAsset":"assets/images/birthday.jpg","sortOrder":2},
+    {"id":"festival","name":"节日祝福","subtitle":"春节 中秋 端午","coverAsset":"assets/images/festival.jpg","sortOrder":3},
+    {"id":"solar_term","name":"节气问候","subtitle":"二十四节气","coverAsset":"assets/images/solar_term.jpg","sortOrder":4}
+  ],
+  "items": [
+    {"id":"daily_1","title":"早安暖心","caption":"新的一天，愿平安顺遂","categoryId":"daily","thumbnailAsset":"assets/images/daily.jpg","imageAsset":"assets/images/daily.jpg","tags":["早安","平安"],"featured":true},
+    {"id":"daily_2","title":"日日安康","caption":"愿健康常伴，天天好心情","categoryId":"daily","thumbnailAsset":"assets/images/daily.jpg","imageAsset":"assets/images/daily.jpg","tags":["健康","问候"],"featured":false},
+    {"id":"birthday_1","title":"福寿安康","caption":"愿岁岁欢喜，福寿绵长","categoryId":"birthday","thumbnailAsset":"assets/images/birthday.jpg","imageAsset":"assets/images/birthday.jpg","tags":["长辈","生日"],"featured":false},
+    {"id":"birthday_2","title":"生日安康","caption":"愿新岁常乐，万事顺意","categoryId":"birthday","thumbnailAsset":"assets/images/birthday.jpg","imageAsset":"assets/images/birthday.jpg","tags":["朋友","生日"],"featured":false},
+    {"id":"festival_1","title":"春节纳福","caption":"愿新岁吉祥如意，阖家安康","categoryId":"festival","thumbnailAsset":"assets/images/festival.jpg","imageAsset":"assets/images/festival.jpg","tags":["春节","团圆"],"featured":true},
+    {"id":"festival_2","title":"灯火团圆","caption":"愿家人常伴，岁月温暖","categoryId":"festival","thumbnailAsset":"assets/images/festival.jpg","imageAsset":"assets/images/festival.jpg","tags":["团圆","节日"],"featured":false},
+    {"id":"solar_1","title":"荷风送暖","caption":"愿夏日清宁，心中常安","categoryId":"solar_term","thumbnailAsset":"assets/images/solar_term.jpg","imageAsset":"assets/images/solar_term.jpg","tags":["夏日","节气"],"featured":false},
+    {"id":"solar_2","title":"四季顺遂","caption":"愿时序有暖，生活有光","categoryId":"solar_term","thumbnailAsset":"assets/images/solar_term.jpg","imageAsset":"assets/images/solar_term.jpg","tags":["四季","问候"],"featured":false}
+  ],
+  "gridThemes": [
+    {"id":"warm_reunion","name":"温暖团圆","previewAssets":["assets/images/grid.jpg","assets/images/festival.jpg","assets/images/daily.jpg","assets/images/solar_term.jpg","assets/images/birthday.jpg","assets/images/grid.jpg","assets/images/festival.jpg","assets/images/daily.jpg"],"centerPlaceholderAsset":"assets/images/placeholder_person.jpg"},
+    {"id":"four_seasons","name":"四季安康","previewAssets":["assets/images/solar_term.jpg","assets/images/daily.jpg","assets/images/grid.jpg","assets/images/birthday.jpg","assets/images/festival.jpg","assets/images/solar_term.jpg","assets/images/daily.jpg","assets/images/grid.jpg"],"centerPlaceholderAsset":"assets/images/placeholder_person.jpg"}
+  ]
+}
