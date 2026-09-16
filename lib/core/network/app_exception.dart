@@ -15,3 +15,15 @@ class DataFormatException extends AppException {
 class NotFoundException extends AppException {
   const NotFoundException(super.message, {super.cause});
 }
+
+class NetworkException extends AppException {
+  const NetworkException(super.message, {super.cause});
+}
+
+class AppTimeoutException extends NetworkException {
+  const AppTimeoutException(super.message, {super.cause});
+}
+
+class RequestCancelledException extends NetworkException {
+  const RequestCancelledException(super.message, {super.cause});
+}

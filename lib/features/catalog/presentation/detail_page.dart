@@ -8,6 +8,7 @@ import 'package:blessing_share/features/catalog/presentation/catalog_provider.da
 import 'package:blessing_share/features/favorites/favorites_provider.dart';
 import 'package:blessing_share/features/profile/activity_provider.dart';
 import 'package:blessing_share/features/profile/domain/activity_record.dart';
+import 'package:blessing_share/features/wechat/wechat_gateway.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -137,12 +138,16 @@ class _DetailContent extends StatelessWidget {
   }
 
   Future<void> _share(BuildContext context, ShareTarget target) async {
+    final gateway = context.read<WechatGateway>();
+    final result = target == ShareTarget.friend
+        ? await gateway.shareToFriend(item)
+        : await gateway.shareToTimeline(item);
     await context.read<ActivityProvider>().recordShare(item.id, target);
     if (!context.mounted) return;
     AppToast.show(
       context,
       type: AppToastType.info,
-      message: target == ShareTarget.friend ? '已生成微信好友演示记录' : '已生成朋友圈演示记录',
+      message: result.message,
     );
   }
 
