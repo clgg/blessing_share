@@ -1,4 +1,5 @@
 import 'package:blessing_share/core/widgets/app_bottom_navigation.dart';
+import 'package:blessing_share/features/catalog/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 
 class AppShell extends StatefulWidget {
@@ -12,7 +13,7 @@ class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
 
   static const _pages = <Widget>[
-    _PlaceholderPage(title: '首页页面'),
+    HomePage(),
     _PlaceholderPage(title: '收藏页面'),
     _PlaceholderPage(title: '我的页面'),
   ];

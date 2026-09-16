@@ -18,7 +18,8 @@ class FavoritesProvider extends ChangeNotifier {
 
   List<String> get visibleIds {
     final ids = _favoriteIds.where((id) {
-      return _filterCategoryId == null || _categoryById[id] == _filterCategoryId;
+      return _filterCategoryId == null ||
+          _categoryById[id] == _filterCategoryId;
     }).toList();
     return List.unmodifiable(ids);
   }

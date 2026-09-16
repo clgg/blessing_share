@@ -36,9 +36,8 @@ class AppBottomNavigation extends StatelessWidget {
             children: List.generate(_items.length, (index) {
               final item = _items[index];
               final selected = currentIndex == index;
-              final color = selected
-                  ? AppColors.primary
-                  : AppColors.textSecondary;
+              final color =
+                  selected ? AppColors.primary : AppColors.textSecondary;
 
               return Expanded(
                 child: Semantics(

@@ -36,9 +36,11 @@ class BlessingImageCard extends StatelessWidget {
                     item.thumbnailAsset,
                     fit: BoxFit.cover,
                     semanticLabel: item.title,
-                    errorBuilder: (context, error, stackTrace) => const ColoredBox(
+                    errorBuilder: (context, error, stackTrace) =>
+                        const ColoredBox(
                       color: AppColors.border,
-                      child: Center(child: Icon(Icons.image_not_supported_outlined)),
+                      child: Center(
+                          child: Icon(Icons.image_not_supported_outlined)),
                     ),
                   ),
                   if (onFavorite != null)

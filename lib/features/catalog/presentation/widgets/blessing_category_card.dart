@@ -67,7 +67,8 @@ class BlessingCategoryCard extends StatelessWidget {
                 const SizedBox(
                   width: 52,
                   height: 52,
-                  child: Icon(Icons.chevron_right_rounded, color: AppColors.title),
+                  child:
+                      Icon(Icons.chevron_right_rounded, color: AppColors.title),
                 ),
               ],
             ),

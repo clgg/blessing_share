@@ -75,11 +75,13 @@ abstract final class AppToast {
                   elevation: 6,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      border: Border(left: BorderSide(color: type.color, width: 8)),
+                      border:
+                          Border(left: BorderSide(color: type.color, width: 8)),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       child: Row(
                         children: [
                           Icon(type.icon, color: type.color, size: 28),

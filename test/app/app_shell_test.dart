@@ -16,11 +16,11 @@ void main() {
     await tester.pumpWidget(const BlessingApp());
 
     await tester.tap(find.text('收藏'));
-    await tester.pumpAndSettle();
+    await tester.pump();
     expect(find.text('收藏页面'), findsOneWidget);
 
     await tester.tap(find.text('我的'));
-    await tester.pumpAndSettle();
+    await tester.pump();
     expect(find.text('我的页面'), findsOneWidget);
   });
 

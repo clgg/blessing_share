@@ -23,9 +23,8 @@ class ActivityProvider extends ChangeNotifier {
       ..clear()
       ..addAll(
         records is List
-            ? records
-                .whereType<Map>()
-                .map((item) => ActivityRecord.fromJson(item.cast<String, Object?>()))
+            ? records.whereType<Map>().map(
+                (item) => ActivityRecord.fromJson(item.cast<String, Object?>()))
             : const [],
       )
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));

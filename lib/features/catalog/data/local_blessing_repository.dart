@@ -26,7 +26,8 @@ class LocalBlessingRepository implements BlessingRepository {
 
   @override
   Future<List<BlessingItem>> getFeatured() async {
-    return List.unmodifiable((await _load()).items.where((item) => item.featured));
+    return List.unmodifiable(
+        (await _load()).items.where((item) => item.featured));
   }
 
   @override

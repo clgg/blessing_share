@@ -1,7 +1,9 @@
 import 'package:blessing_share/app/blessing_app.dart';
+import 'package:blessing_share/core/storage/shared_preferences_app_storage.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const BlessingApp());
+  final storage = await SharedPreferencesAppStorage.create();
+  runApp(BlessingApp(storage: storage));
 }
