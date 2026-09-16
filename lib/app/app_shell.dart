@@ -1,6 +1,7 @@
 import 'package:blessing_share/core/widgets/app_bottom_navigation.dart';
 import 'package:blessing_share/features/catalog/presentation/home_page.dart';
 import 'package:blessing_share/features/favorites/favorites_page.dart';
+import 'package:blessing_share/features/grid/grid_theme_page.dart';
 import 'package:blessing_share/features/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class _AppShellState extends State<AppShell> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          const HomePage(),
+          HomePage(onOpenGrid: _openGrid),
           FavoritesPage(onGoHome: () => _selectTab(0)),
           const ProfilePage(),
         ],
@@ -34,5 +35,11 @@ class _AppShellState extends State<AppShell> {
 
   void _selectTab(int index) {
     setState(() => _currentIndex = index);
+  }
+
+  void _openGrid() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const GridThemePage()),
+    );
   }
 }
