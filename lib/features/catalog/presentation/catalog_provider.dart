@@ -40,9 +40,17 @@ class CatalogProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> loadCategory(String categoryId) async {
+  Future<void> loadCategory(
+    String categoryId, {
+    bool keepExistingItems = false,
+  }) async {
     _requestedCategoryId = categoryId;
-    _setLoading();
+    if (keepExistingItems) {
+      _error = null;
+    } else {
+      _categoryItems = const [];
+      _setLoading();
+    }
     try {
       final items = await _repository.getByCategory(categoryId);
       if (_requestedCategoryId != categoryId) return;

@@ -1,4 +1,5 @@
 import 'package:blessing_share/core/widgets/app_scaffold.dart';
+import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:flutter/material.dart';
 
 class HelpPage extends StatelessWidget {
@@ -20,6 +21,10 @@ class HelpPage extends StatelessWidget {
             body: '进入图片详情后点击右上角爱心；收藏页支持按分类筛选和撤销误删。',
           ),
           _HelpCard(
+            title: '听不清字怎么办？',
+            body: '长按标题、说明或图片，手机就会朗读对应文字，方便眼睛不太方便时使用。',
+          ),
+          _HelpCard(
             title: '为什么没有真的分享到微信？',
             body: '当前是完整演示框架，只记录操作。后续配置微信开放平台后可替换为真实分享。',
           ),
@@ -37,17 +42,20 @@ class _HelpCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
-            Text(body, style: Theme.of(context).textTheme.bodyLarge),
-          ],
+    return Speakable(
+      text: '$title。$body',
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 8),
+              Text(body, style: Theme.of(context).textTheme.bodyLarge),
+            ],
+          ),
         ),
       ),
     );

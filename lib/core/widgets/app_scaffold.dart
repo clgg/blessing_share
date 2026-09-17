@@ -4,12 +4,14 @@ class AppScaffold extends StatelessWidget {
   const AppScaffold({
     required this.body,
     this.title,
+    this.actions,
     this.bottomNavigationBar,
     super.key,
   });
 
   final Widget body;
   final String? title;
+  final List<Widget>? actions;
   final Widget? bottomNavigationBar;
 
   @override
@@ -22,6 +24,7 @@ class AppScaffold extends StatelessWidget {
               centerTitle: false,
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
+              actions: actions,
             ),
       body: SafeArea(child: body),
       bottomNavigationBar: bottomNavigationBar,

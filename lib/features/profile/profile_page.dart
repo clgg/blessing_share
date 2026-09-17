@@ -1,4 +1,6 @@
 import 'package:blessing_share/app/app_theme.dart';
+import 'package:blessing_share/core/widgets/speakable.dart';
+import 'package:blessing_share/features/likes/likes_page.dart';
 import 'package:blessing_share/features/profile/about_page.dart';
 import 'package:blessing_share/features/profile/activity_history_page.dart';
 import 'package:blessing_share/features/profile/domain/activity_record.dart';
@@ -6,6 +8,8 @@ import 'package:blessing_share/features/profile/feedback_page.dart';
 import 'package:blessing_share/features/profile/help_page.dart';
 import 'package:blessing_share/features/profile/privacy_page.dart';
 import 'package:blessing_share/features/profile/session_provider.dart';
+import 'package:blessing_share/features/profile/settings_page.dart';
+import 'package:blessing_share/features/update/app_update_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,16 +19,40 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final session = context.watch<SessionProvider>();
+    final hasUpdate = context.watch<AppUpdateProvider>().hasUpdate;
+    final colors = context.blessingColors;
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 22, 16, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('我的', style: Theme.of(context).textTheme.displaySmall),
+            Row(
+              children: [
+                Expanded(
+                  child: Speakable(
+                    text: '我的',
+                    child: Text(
+                      '我的',
+                      style: Theme.of(context).textTheme.displaySmall,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  key: const Key('profile-settings-button'),
+                  tooltip: '设置',
+                  iconSize: 28,
+                  onPressed: () => _open(context, const SettingsPage()),
+                  icon: Icon(
+                    Icons.settings_outlined,
+                    color: colors.title,
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 18),
             Material(
-              color: AppColors.card,
+              color: colors.card,
               borderRadius: BorderRadius.circular(20),
               child: InkWell(
                 borderRadius: BorderRadius.circular(20),
@@ -62,6 +90,12 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 18),
+            _ProfileMenuTile(
+              icon: Icons.thumb_up_outlined,
+              title: '我的点赞',
+              subtitle: '查看点过赞的祝福图片',
+              onTap: () => _open(context, const LikesPage()),
+            ),
             _ProfileMenuTile(
               icon: Icons.ios_share_rounded,
               title: '分享历史',
@@ -120,7 +154,8 @@ class ProfilePage extends StatelessWidget {
             _ProfileMenuTile(
               icon: Icons.info_outline_rounded,
               title: '关于我们',
-              subtitle: '版本与产品介绍',
+              subtitle: hasUpdate ? '有新版本' : '版本与产品介绍',
+              showBadge: hasUpdate,
               onTap: () => _open(context, const AboutPage()),
             ),
           ],
@@ -140,25 +175,60 @@ class _ProfileMenuTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    this.showBadge = false,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
+  final bool showBadge;
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.blessingColors;
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
         minTileHeight: 68,
         onTap: onTap,
-        leading: Icon(icon, color: AppColors.primary, size: 30),
-        title: Text(title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.chevron_right_rounded, size: 28),
+        onLongPress: () => speakForAccessibility(context, '$title，$subtitle'),
+        leading: Icon(icon, color: colors.primary, size: 30),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: colors.textPrimary,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: showBadge
+              ? TextStyle(
+                  color: colors.danger,
+                  fontWeight: FontWeight.w600,
+                )
+              : null,
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showBadge) ...[
+              Container(
+                key: const Key('profile-about-update-badge'),
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: colors.danger,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            const Icon(Icons.chevron_right_rounded, size: 28),
+          ],
+        ),
       ),
     );
   }

@@ -8,6 +8,7 @@ class GridGuidePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.blessingColors;
     return AppScaffold(
       title: '九宫格发布引导',
       body: SingleChildScrollView(
@@ -15,8 +16,11 @@ class GridGuidePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(Icons.check_circle_rounded,
-                color: Color(0xFF2E8B62), size: 72),
+            Icon(
+              Icons.check_circle_rounded,
+              color: colors.success,
+              size: 72,
+            ),
             const SizedBox(height: 12),
             Text(
               '九宫格演示已完成',
@@ -31,9 +35,9 @@ class GridGuidePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: colors.card,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: colors.border),
               ),
               child: Text(
                 '当前为框架演示，图片未真实保存，也不会自动打开微信。',
@@ -62,17 +66,18 @@ class _GuideStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.blessingColors;
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         children: [
           CircleAvatar(
             radius: 24,
-            backgroundColor: AppColors.primary,
+            backgroundColor: colors.primary,
             child: Text(
               number,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: colors.onPrimary,
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
               ),
@@ -82,8 +87,8 @@ class _GuideStep extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: colors.textPrimary,
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
               ),

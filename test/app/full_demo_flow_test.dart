@@ -5,6 +5,7 @@ import 'package:blessing_share/features/catalog/data/local_blessing_repository.d
 import 'package:blessing_share/features/favorites/favorites_page.dart';
 import 'package:blessing_share/features/profile/activity_provider.dart';
 import 'package:blessing_share/features/profile/domain/activity_record.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +64,11 @@ void main() {
     await tester.ensureVisible(shareHistory);
     await tester.tap(shareHistory);
     await tester.pumpAndSettle();
-    expect(find.text('分享演示记录 · daily_1'), findsOneWidget);
+    AppToast.dismiss();
+    await tester.pump();
+    expect(find.text('早安暖心'), findsWidgets);
+    expect(find.byKey(const ValueKey('share-target-friend')), findsOneWidget);
+    expect(find.byTooltip('删除'), findsOneWidget);
 
     await tester.pageBack();
     await tester.pumpAndSettle();

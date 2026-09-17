@@ -104,6 +104,7 @@ class _GridCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.blessingColors;
     final position = index + 1;
     final isCenter = position == 5;
     final asset = isCenter
@@ -119,7 +120,7 @@ class _GridCell extends StatelessWidget {
           top: 5,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: isCenter ? AppColors.primary : Colors.black54,
+              color: isCenter ? colors.primary : colors.scrim,
               shape: BoxShape.circle,
             ),
             child: SizedBox.square(
@@ -127,8 +128,8 @@ class _GridCell extends StatelessWidget {
               child: Center(
                 child: Text(
                   '$position',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isCenter ? colors.onPrimary : colors.onOverlay,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),

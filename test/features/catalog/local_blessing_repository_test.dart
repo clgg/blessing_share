@@ -26,11 +26,30 @@ void main() {
         bundle: _StringAssetBundle(_validFixture),
       );
 
-      expect((await repository.getByCategory('daily')).length, 2);
+      final daily = await repository.getByCategory('daily');
+      expect(daily, hasLength(2));
+      expect(daily.first.aspectRatio, 1);
+      expect(daily.last.aspectRatio, 0.5625);
       expect(
         (await repository.getFeatured()).map((item) => item.id),
         ['daily_1', 'festival_1'],
       );
+      expect((await repository.getById('festival_1')).aspectRatio, closeTo(1.7778, 0.0001));
+    });
+
+    test('分类携带全部标签与筛选配置', () async {
+      final repository = LocalBlessingRepository(
+        bundle: _StringAssetBundle(_validFixture),
+      );
+
+      final categories = await repository.getCategories();
+      final daily = categories.firstWhere((c) => c.id == 'daily');
+      expect(daily.allFilterLabel, '全部问候');
+      expect(daily.filters.map((f) => f.label), ['早安问候', '午间问候']);
+
+      final festival = categories.firstWhere((c) => c.id == 'festival');
+      expect(festival.allFilterLabel, '全部');
+      expect(festival.filters, isEmpty);
     });
 
     test('按 ID 返回详情且未知 ID 抛出未找到异常', () async {
@@ -87,14 +106,14 @@ const _validFixture = '''
 {
   "categories": [
     {"id":"festival","name":"节日祝福","subtitle":"春节 中秋 端午","coverAsset":"assets/images/festival.jpg","sortOrder":3},
-    {"id":"daily","name":"日常问候","subtitle":"早安 午安 晚安","coverAsset":"assets/images/daily.jpg","sortOrder":1},
+    {"id":"daily","name":"日常问候","subtitle":"早安 午安 晚安","coverAsset":"assets/images/daily.jpg","sortOrder":1,"allFilterLabel":"全部问候","filters":[{"id":"早安问候","label":"早安问候"},{"id":"午间问候","label":"午间问候"}]},
     {"id":"solar_term","name":"节气问候","subtitle":"二十四节气","coverAsset":"assets/images/solar_term.jpg","sortOrder":4},
     {"id":"birthday","name":"生日祝福","subtitle":"家人 朋友 长辈","coverAsset":"assets/images/birthday.jpg","sortOrder":2}
   ],
   "items": [
-    {"id":"daily_1","title":"早安暖心","caption":"新的一天，平安顺遂","categoryId":"daily","thumbnailAsset":"assets/images/daily.jpg","imageAsset":"assets/images/daily.jpg","tags":["早安"],"featured":true},
-    {"id":"daily_2","title":"日日安康","caption":"愿健康常伴左右","categoryId":"daily","thumbnailAsset":"assets/images/daily.jpg","imageAsset":"assets/images/daily.jpg","tags":["健康"],"featured":false},
-    {"id":"festival_1","title":"春节纳福","caption":"愿新岁吉祥如意","categoryId":"festival","thumbnailAsset":"assets/images/festival.jpg","imageAsset":"assets/images/festival.jpg","tags":["春节"],"featured":true}
+    {"id":"daily_1","title":"早安暖心","caption":"新的一天，平安顺遂","categoryId":"daily","thumbnailAsset":"assets/images/daily.jpg","imageAsset":"assets/images/daily.jpg","aspectRatio":1,"tags":["早安"],"featured":true},
+    {"id":"daily_2","title":"日日安康","caption":"愿健康常伴左右","categoryId":"daily","thumbnailAsset":"assets/images/daily_9x16.jpg","imageAsset":"assets/images/daily_9x16.jpg","aspectRatio":0.5625,"tags":["健康"],"featured":false},
+    {"id":"festival_1","title":"春节纳福","caption":"愿新岁吉祥如意","categoryId":"festival","thumbnailAsset":"assets/images/festival_16x9.jpg","imageAsset":"assets/images/festival_16x9.jpg","aspectRatio":1.7778,"tags":["春节"],"featured":true}
   ],
   "gridThemes": [
     {"id":"warm_reunion","name":"温暖团圆","previewAssets":["assets/images/grid.jpg","assets/images/festival.jpg","assets/images/daily.jpg","assets/images/solar_term.jpg","assets/images/birthday.jpg","assets/images/grid.jpg","assets/images/festival.jpg","assets/images/daily.jpg"],"centerPlaceholderAsset":"assets/images/placeholder_person.jpg"}

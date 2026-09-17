@@ -1,5 +1,6 @@
 import 'package:blessing_share/app/blessing_app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -34,5 +35,18 @@ void main() {
     ]) {
       expect(tester.getSize(find.byKey(key)).height, greaterThanOrEqualTo(52));
     }
+  });
+
+  testWidgets('状态栏透明并使用深色系统图标', (tester) async {
+    await tester.pumpWidget(const BlessingApp());
+
+    final region = tester.widget<AnnotatedRegion<SystemUiOverlayStyle>>(
+      find.byKey(const Key('app-system-ui-style')),
+    );
+
+    expect(region.value.statusBarColor, Colors.transparent);
+    expect(region.value.statusBarIconBrightness, Brightness.dark);
+    expect(region.value.statusBarBrightness, Brightness.light);
+    expect(region.value.systemStatusBarContrastEnforced, isFalse);
   });
 }

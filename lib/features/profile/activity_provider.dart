@@ -46,6 +46,17 @@ class ActivityProvider extends ChangeNotifier {
     return _record(itemId: themeId, type: ActivityType.grid);
   }
 
+  Future<void> deleteByIds(Iterable<String> ids) async {
+    await load();
+    final idSet = ids.toSet();
+    if (idSet.isEmpty) return;
+    final before = _records.length;
+    _records.removeWhere((record) => idSet.contains(record.id));
+    if (_records.length == before) return;
+    await _persist();
+    notifyListeners();
+  }
+
   Future<void> _record({
     required String itemId,
     required ActivityType type,

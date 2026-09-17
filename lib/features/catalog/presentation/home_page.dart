@@ -1,5 +1,6 @@
 import 'package:blessing_share/app/app_theme.dart';
 import 'package:blessing_share/core/widgets/app_empty_state.dart';
+import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_category.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/catalog/presentation/catalog_provider.dart';
@@ -7,6 +8,7 @@ import 'package:blessing_share/features/catalog/presentation/category_page.dart'
 import 'package:blessing_share/features/catalog/presentation/detail_page.dart';
 import 'package:blessing_share/features/catalog/presentation/widgets/blessing_category_card.dart';
 import 'package:blessing_share/features/catalog/presentation/widgets/blessing_image_card.dart';
+import 'package:blessing_share/features/catalog/presentation/widgets/home_calendar_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,13 +30,25 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('祝福首页', style: Theme.of(context).textTheme.displaySmall),
-              const SizedBox(height: 6),
-              Text(
-                '把温暖的问候，送给牵挂的人',
-                style: Theme.of(context).textTheme.bodyLarge,
+              Speakable(
+                text: '平安喜乐',
+                child: Text(
+                  '平安喜乐',
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 6),
+              Speakable(
+                text: '把温暖的问候，送给牵挂的人',
+                child: Text(
+                  '把温暖的问候，送给牵挂的人',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              const SizedBox(height: 20),
+              if (!catalog.isLoading || catalog.categories.isNotEmpty)
+                const HomeCalendarCard(),
+              const SizedBox(height: 20),
               if (catalog.isLoading && catalog.categories.isEmpty)
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 80),
@@ -49,18 +63,28 @@ class HomePage extends StatelessWidget {
                   onAction: catalog.loadHome,
                 )
               else ...[
-                for (final category in catalog.categories) ...[
+                for (var index = 0;
+                    index < catalog.categories.length;
+                    index++) ...[
                   BlessingCategoryCard(
-                    category: category,
-                    onTap: () => _openCategory(context, category),
+                    category: catalog.categories[index],
+                    imageOnRight: index.isOdd,
+                    onTap: () =>
+                        _openCategory(context, catalog.categories[index]),
                   ),
                   const SizedBox(height: 14),
                 ],
                 _GridEntry(onTap: onOpenGrid ?? () {}),
                 const SizedBox(height: 28),
-                Text('今日推荐', style: Theme.of(context).textTheme.headlineSmall),
+                Speakable(
+                  text: '今日推荐',
+                  child: Text(
+                    '今日推荐',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ),
                 const SizedBox(height: 14),
-                _FeaturedRow(items: catalog.featured),
+                _FeaturedRow(items: catalog.featured.take(2).toList()),
               ],
             ],
           ),
@@ -113,59 +137,70 @@ class _GridEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 148,
-      child: Material(
-        color: AppColors.title,
-        borderRadius: BorderRadius.circular(20),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset('assets/images/grid.jpg', fit: BoxFit.cover),
-              const DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xCC5B1010), Color(0x335B1010)],
+    final colors = context.blessingColors;
+    return Speakable(
+      text: '朋友圈九宫格，选主题，放照片，看预览',
+      child: SizedBox(
+        height: 148,
+        child: Material(
+          color: colors.title,
+          borderRadius: BorderRadius.circular(20),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onTap,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  'assets/images/grid.jpg',
+                  fit: BoxFit.cover,
+                  semanticLabel: '朋友圈九宫格',
+                ),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [colors.overlayStrong, colors.overlaySoft],
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '朋友圈九宫格',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '朋友圈九宫格',
+                              style: TextStyle(
+                                color: colors.onOverlay,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            '选主题 · 放照片 · 看预览',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(color: Colors.white),
-                          ),
-                        ],
+                            const SizedBox(height: 6),
+                            Text(
+                              '选主题 · 放照片 · 看预览',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(color: colors.onOverlay),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const Icon(Icons.arrow_forward_rounded,
-                        color: Colors.white, size: 34),
-                  ],
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        color: colors.onOverlay,
+                        size: 34,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

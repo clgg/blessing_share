@@ -28,6 +28,34 @@ void main() {
     expect(categories.first.name, '日常问候');
   });
 
+  test('远程 Repository 接受仅包含服务端图片 URL 的素材', () async {
+    final dio = Dio()
+      ..httpClientAdapter = _FixtureAdapter({
+        'data': [
+          {
+            'id': 'festival_remote_1',
+            'title': '春节快乐',
+            'caption': '新春纳福，万事如意',
+            'categoryId': 'festival',
+            'thumbnailUrl': 'https://cdn.example.test/thumb.webp',
+            'imageUrl': 'https://cdn.example.test/full.webp',
+            'aspectRatio': 0.5625,
+            'tags': ['春节'],
+            'featured': true,
+          },
+        ],
+      });
+
+    final items =
+        await RemoteBlessingRepository(dio: dio).getByCategory('festival');
+    final dynamic item = items.single;
+
+    expect(item.thumbnailAsset, isNull);
+    expect(item.imageAsset, isNull);
+    expect(item.thumbnailUrl, 'https://cdn.example.test/thumb.webp');
+    expect(item.imageUrl, 'https://cdn.example.test/full.webp');
+  });
+
   test('远程 Repository 区分超时与损坏 JSON', () async {
     final timeoutDio = Dio()..httpClientAdapter = _TimeoutAdapter();
     expect(
@@ -115,4 +143,5 @@ const dailyItem = BlessingItem(
   imageAsset: 'assets/images/daily.jpg',
   tags: ['早安'],
   featured: true,
+  aspectRatio: 1,
 );

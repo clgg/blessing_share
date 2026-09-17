@@ -3,7 +3,9 @@ import 'package:blessing_share/features/catalog/presentation/home_page.dart';
 import 'package:blessing_share/features/favorites/favorites_page.dart';
 import 'package:blessing_share/features/grid/grid_theme_page.dart';
 import 'package:blessing_share/features/profile/profile_page.dart';
+import 'package:blessing_share/features/update/app_update_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -35,6 +37,10 @@ class _AppShellState extends State<AppShell> {
 
   void _selectTab(int index) {
     setState(() => _currentIndex = index);
+    if (index == 2) {
+      // Check updates whenever user enters “我的”.
+      context.read<AppUpdateProvider>().checkForUpdate();
+    }
   }
 
   void _openGrid() {

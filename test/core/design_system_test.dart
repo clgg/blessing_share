@@ -4,6 +4,7 @@ import 'package:blessing_share/core/widgets/primary_action_button.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_category.dart';
 import 'package:blessing_share/features/catalog/presentation/widgets/blessing_category_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -66,14 +67,35 @@ void main() {
 
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('360dp 首页内容宽度下分类文字完整且图片不超过 40%', (tester) async {
+    await tester.pumpWidget(
+      _testHost(
+        BlessingCategoryCard(category: category, onTap: () {}),
+        width: 328,
+      ),
+    );
+
+    final title = tester.renderObject<RenderParagraph>(find.text('日常问候'));
+    final subtitle = tester.renderObject<RenderParagraph>(
+      find.text('早安 午安 晚安'),
+    );
+
+    expect(title.didExceedMaxLines, isFalse);
+    expect(subtitle.didExceedMaxLines, isFalse);
+    expect(
+      tester.getSize(find.byKey(const Key('category-cover'))).width,
+      lessThanOrEqualTo(132),
+    );
+  });
 }
 
-Widget _testHost(Widget child) {
+Widget _testHost(Widget child, {double width = 358}) {
   return MaterialApp(
     theme: AppTheme.light(),
     home: Scaffold(
       body: Center(
-        child: SizedBox(width: 358, child: child),
+        child: SizedBox(width: width, child: child),
       ),
     ),
   );

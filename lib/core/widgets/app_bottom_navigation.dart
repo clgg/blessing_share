@@ -1,4 +1,5 @@
 import 'package:blessing_share/app/app_theme.dart';
+import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:flutter/material.dart';
 
 class AppBottomNavigation extends StatelessWidget {
@@ -23,10 +24,11 @@ class AppBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.blessingColors;
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AppColors.card,
-        border: Border(top: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: colors.card,
+        border: Border(top: BorderSide(color: colors.border)),
       ),
       child: SafeArea(
         top: false,
@@ -36,18 +38,20 @@ class AppBottomNavigation extends StatelessWidget {
             children: List.generate(_items.length, (index) {
               final item = _items[index];
               final selected = currentIndex == index;
-              final color =
-                  selected ? AppColors.primary : AppColors.textSecondary;
+              final color = selected ? colors.primary : colors.textSecondary;
 
               return Expanded(
                 child: Semantics(
                   selected: selected,
                   button: true,
                   label: selected ? '${item.label}，已选中' : item.label,
+                  hint: '长按朗读',
                   excludeSemantics: true,
                   child: InkWell(
                     key: item.key,
                     onTap: () => onTap(index),
+                    onLongPress: () =>
+                        speakForAccessibility(context, item.label),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

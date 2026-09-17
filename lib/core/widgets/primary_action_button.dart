@@ -5,17 +5,24 @@ class PrimaryActionButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.icon,
+    this.iconWidget,
     this.loading = false,
     super.key,
-  });
+  }) : assert(
+          icon == null || iconWidget == null,
+          'Provide either icon or iconWidget, not both',
+        );
 
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
+  final Widget? iconWidget;
   final bool loading;
 
   @override
   Widget build(BuildContext context) {
+    final leading = iconWidget ??
+        (icon == null ? null : Icon(icon, size: 24));
     final content = loading
         ? const SizedBox.square(
             dimension: 24,
@@ -25,8 +32,8 @@ class PrimaryActionButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (icon != null) ...[
-                Icon(icon, size: 24),
+              if (leading != null) ...[
+                leading,
                 const SizedBox(width: 8),
               ],
               Flexible(
