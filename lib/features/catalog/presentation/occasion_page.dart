@@ -1,6 +1,5 @@
 import 'package:blessing_share/app/app_theme.dart';
-import 'package:blessing_share/core/widgets/app_empty_state.dart';
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/catalog/domain/calendar_occasion.dart';
@@ -121,7 +120,7 @@ class _OccasionPageState extends State<OccasionPage> {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: colors.card,
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: colors.border),
                     ),
                     child: Padding(

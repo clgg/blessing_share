@@ -1,76 +1,119 @@
-import 'package:blessing_share/core/network/api_client.dart';
-import 'package:blessing_share/core/network/app_exception.dart';
+import 'package:blessing_network/blessing_network.dart';
+import 'package:blessing_share/core/error/app_exception.dart';
+import 'package:blessing_share/features/catalog/data/mappers/blessing_mapper.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_category.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_repository.dart';
 import 'package:blessing_share/features/catalog/domain/grid_theme.dart';
-import 'package:dio/dio.dart';
 
 class RemoteBlessingRepository implements BlessingRepository {
-  RemoteBlessingRepository({required Dio dio}) : _dio = dio;
+  RemoteBlessingRepository({
+    required BlessingApi api,
+    BlessingMapper mapper = const BlessingMapper(),
+  })  : _api = api,
+        _mapper = mapper;
 
-  final Dio _dio;
+  /// Convenience: Dio from [NetworkClient.create] + [BlessingApi].
+  factory RemoteBlessingRepository.fromBaseUrl(
+    String baseUrl, {
+    bool enableLogging = false,
+  }) {
+    final dio = NetworkClient.create(baseUrl, enableLogging: enableLogging);
+    return RemoteBlessingRepository(api: BlessingApi(dio));
+  }
+
+  final BlessingApi _api;
+  final BlessingMapper _mapper;
 
   @override
   Future<List<BlessingCategory>> getCategories() {
-    return _getList('/categories', BlessingCategory.fromJson);
+    return _mapList(
+      () => _api.getCategories(),
+      _mapper.toCategory,
+      errorMessage: '服务器数据格式不正确',
+    );
   }
 
   @override
   Future<List<BlessingItem>> getFeatured() {
-    return _getList('/featured', BlessingItem.fromJson);
+    return _mapList(
+      () => _api.getFeatured(),
+      _mapper.toItem,
+      errorMessage: '服务器数据格式不正确',
+    );
   }
 
   @override
   Future<List<BlessingItem>> getByCategory(String categoryId) {
-    return _getList(
-      '/categories/${Uri.encodeComponent(categoryId)}/items',
-      BlessingItem.fromJson,
+    return _mapList(
+      () => _api.getByCategory(categoryId),
+      _mapper.toItem,
+      errorMessage: '服务器数据格式不正确',
     );
   }
 
   @override
   Future<BlessingItem> getById(String id) async {
-    final data = await _getData('/items/${Uri.encodeComponent(id)}');
     try {
-      return BlessingItem.fromJson(_asMap(data));
+      final dto = await _api.getById(id);
+      return _mapper.toItem(dto);
+    } on DioException catch (error) {
+      throw _mapNetwork(error, formatMessage: '素材详情数据格式不正确');
     } catch (error) {
+      if (error is AppException) rethrow;
       throw DataFormatException('素材详情数据格式不正确', cause: error);
     }
   }
 
   @override
   Future<List<GridTheme>> getGridThemes() {
-    return _getList('/grid-themes', GridTheme.fromJson);
+    return _mapList(
+      () => _api.getGridThemes(),
+      _mapper.toGridTheme,
+      errorMessage: '服务器数据格式不正确',
+    );
   }
 
-  Future<List<T>> _getList<T>(
-    String path,
-    T Function(Map<String, Object?> json) fromJson,
-  ) async {
-    final data = await _getData(path);
+  Future<List<T>> _mapList<D, T>(
+    Future<List<D>> Function() call,
+    T Function(D dto) map, {
+    required String errorMessage,
+  }) async {
     try {
-      if (data is! List) throw const FormatException('data 必须是列表');
-      return List.unmodifiable(data.map((item) => fromJson(_asMap(item))));
-    } catch (error) {
-      if (error is DataFormatException) rethrow;
-      throw DataFormatException('服务器数据格式不正确', cause: error);
-    }
-  }
-
-  Future<Object?> _getData(String path) async {
-    try {
-      final response = await _dio.get<Object?>(path);
-      final body = response.data;
-      if (body is Map && body.containsKey('data')) return body['data'];
-      return body;
+      final dtos = await call();
+      return List.unmodifiable(dtos.map(map));
     } on DioException catch (error) {
-      throw ApiClient.mapDioException(error);
+      throw _mapNetwork(error, formatMessage: errorMessage);
+    } catch (error) {
+      if (error is AppException) rethrow;
+      throw DataFormatException(errorMessage, cause: error);
     }
   }
-}
 
-Map<String, Object?> _asMap(Object? value) {
-  if (value is! Map) throw const FormatException('条目必须是对象');
-  return value.cast<String, Object?>();
+  AppException _mapNetwork(
+    DioException error, {
+    String formatMessage = '服务器数据格式不正确',
+  }) {
+    if (_isFormatFailure(error)) {
+      return DataFormatException(formatMessage, cause: error);
+    }
+    final failure = NetworkFailureMapper.fromDio(error);
+    return switch (failure) {
+      NetworkTimeoutFailure() =>
+        AppTimeoutException(failure.message, cause: failure.cause),
+      NetworkCancelledFailure() =>
+        RequestCancelledException(failure.message, cause: failure.cause),
+      NetworkHttpFailure() || NetworkConnectionFailure() =>
+        NetworkException(failure.message, cause: failure.cause),
+      _ => NetworkException(failure.message, cause: failure.cause),
+    };
+  }
+
+  bool _isFormatFailure(DioException error) {
+    final cause = error.error;
+    return cause is FormatException ||
+        cause is TypeError ||
+        (error.type == DioExceptionType.unknown &&
+            error.response?.statusCode == 200);
+  }
 }

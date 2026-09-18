@@ -4,6 +4,11 @@ import 'package:blessing_share/features/catalog/presentation/widgets/blessing_im
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+ImageProvider _unwrap(ImageProvider provider) {
+  if (provider is ResizeImage) return provider.imageProvider;
+  return provider;
+}
+
 void main() {
   testWidgets('素材卡优先使用服务端缩略图 URL', (tester) async {
     const item = BlessingItem(
@@ -34,7 +39,7 @@ void main() {
     final image = tester.widget<Image>(
       find.byKey(const Key('blessing-media-image')),
     );
-    expect(image.image, isA<NetworkImage>());
+    expect(_unwrap(image.image), isA<NetworkImage>());
   });
 
   testWidgets('本地素材卡继续使用 AssetImage', (tester) async {
@@ -65,6 +70,6 @@ void main() {
     final image = tester.widget<Image>(
       find.byKey(const Key('blessing-media-image')),
     );
-    expect(image.image, isA<AssetImage>());
+    expect(_unwrap(image.image), isA<AssetImage>());
   });
 }

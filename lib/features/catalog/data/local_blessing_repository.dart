@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:blessing_share/core/network/app_exception.dart';
+import 'package:blessing_share/core/error/app_exception.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_category.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_repository.dart';
 import 'package:blessing_share/features/catalog/domain/grid_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class LocalBlessingRepository implements BlessingRepository {
@@ -16,6 +17,12 @@ class LocalBlessingRepository implements BlessingRepository {
   final AssetBundle _bundle;
   final String assetPath;
   _CatalogData? _cachedData;
+  Future<_CatalogData>? _loading;
+
+  /// Warms the in-memory catalog (safe to call before first UI frame).
+  Future<void> preload() async {
+    await _load();
+  }
 
   @override
   Future<List<BlessingCategory>> getCategories() async {
@@ -50,23 +57,35 @@ class LocalBlessingRepository implements BlessingRepository {
     return List.unmodifiable((await _load()).gridThemes);
   }
 
-  Future<_CatalogData> _load() async {
-    if (_cachedData case final data?) return data;
+  Future<_CatalogData> _load() {
+    if (_cachedData case final data?) return Future.value(data);
+    return _loading ??= _loadAndCache();
+  }
+
+  Future<_CatalogData> _loadAndCache() async {
     try {
       final source = await _bundle.loadString(assetPath);
-      final decoded = jsonDecode(source);
-      if (decoded is! Map<String, Object?>) {
-        throw const FormatException('根节点必须是 JSON 对象');
-      }
-      final data = _CatalogData.fromJson(decoded);
+      // Parse off the UI isolate so first-frame work stays responsive.
+      final data = await compute(_parseCatalogJson, source);
       _cachedData = data;
       return data;
     } on AppException {
       rethrow;
     } catch (error) {
       throw DataFormatException('演示素材读取失败，请重新加载', cause: error);
+    } finally {
+      _loading = null;
     }
   }
+}
+
+/// Top-level for [compute]; keep parsing off the UI thread.
+_CatalogData _parseCatalogJson(String source) {
+  final decoded = jsonDecode(source);
+  if (decoded is! Map) {
+    throw const FormatException('根节点必须是 JSON 对象');
+  }
+  return _CatalogData.fromJson(decoded.cast<String, Object?>());
 }
 
 class _CatalogData {

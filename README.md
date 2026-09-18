@@ -43,7 +43,8 @@
 - 本地演示数据：`assets/data/blessings.json`
 - 压缩演示图片：`assets/images/`
 - 本地 Repository：`lib/features/catalog/data/local_blessing_repository.dart`
-- Dio 配置：`lib/core/network/api_client.dart`
+- 网络包：`packages/blessing_network/`（见 `docs/architecture/network-package.md`）
+- 公用 UI：`packages/ui_common/`（`AppDimens` / `BlessingPalette` / Scaffold、按钮、空态、Toast 等）
 - 远程 Repository：`lib/features/catalog/data/remote_blessing_repository.dart`
 - 微信接口：`lib/features/wechat/wechat_gateway.dart`
 - 当前演示实现：`lib/features/wechat/demo_wechat_gateway.dart`

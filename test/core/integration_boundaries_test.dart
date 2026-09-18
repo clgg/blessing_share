@@ -1,26 +1,24 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:blessing_share/core/network/api_client.dart';
-import 'package:blessing_share/core/network/app_exception.dart';
+import 'package:blessing_network/blessing_network.dart';
+import 'package:blessing_share/core/error/app_exception.dart';
 import 'package:blessing_share/features/catalog/data/remote_blessing_repository.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/wechat/demo_wechat_gateway.dart';
 import 'package:blessing_share/features/wechat/wechat_gateway.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('ApiClient 配置固定超时和 JSON 请求头', () {
-    final dio = ApiClient.create('https://example.test');
-    expect(dio.options.connectTimeout, const Duration(seconds: 8));
-    expect(dio.options.receiveTimeout, const Duration(seconds: 12));
+  test('NetworkClient 配置固定超时和 JSON 请求头', () {
+    final dio = NetworkClient.create('https://example.test');
+    expect(dio.options.connectTimeout, NetworkClient.defaultConnectTimeout);
+    expect(dio.options.receiveTimeout, NetworkClient.defaultReceiveTimeout);
     expect(dio.options.headers['Accept'], 'application/json');
   });
 
   test('远程 Repository 将分类响应映射为领域模型', () async {
-    final dio = Dio()..httpClientAdapter = _FixtureAdapter(categoriesResponse);
-    final repository = RemoteBlessingRepository(dio: dio);
+    final repository = _remoteWithFixture(categoriesResponse);
 
     final categories = await repository.getCategories();
 
@@ -29,26 +27,24 @@ void main() {
   });
 
   test('远程 Repository 接受仅包含服务端图片 URL 的素材', () async {
-    final dio = Dio()
-      ..httpClientAdapter = _FixtureAdapter({
-        'data': [
-          {
-            'id': 'festival_remote_1',
-            'title': '春节快乐',
-            'caption': '新春纳福，万事如意',
-            'categoryId': 'festival',
-            'thumbnailUrl': 'https://cdn.example.test/thumb.webp',
-            'imageUrl': 'https://cdn.example.test/full.webp',
-            'aspectRatio': 0.5625,
-            'tags': ['春节'],
-            'featured': true,
-          },
-        ],
-      });
+    final repository = _remoteWithFixture({
+      'data': [
+        {
+          'id': 'festival_remote_1',
+          'title': '春节快乐',
+          'caption': '新春纳福，万事如意',
+          'categoryId': 'festival',
+          'thumbnailUrl': 'https://cdn.example.test/thumb.webp',
+          'imageUrl': 'https://cdn.example.test/full.webp',
+          'aspectRatio': 0.5625,
+          'tags': ['春节'],
+          'featured': true,
+        },
+      ],
+    });
 
-    final items =
-        await RemoteBlessingRepository(dio: dio).getByCategory('festival');
-    final dynamic item = items.single;
+    final items = await repository.getByCategory('festival');
+    final item = items.single;
 
     expect(item.thumbnailAsset, isNull);
     expect(item.imageAsset, isNull);
@@ -57,19 +53,19 @@ void main() {
   });
 
   test('远程 Repository 区分超时与损坏 JSON', () async {
-    final timeoutDio = Dio()..httpClientAdapter = _TimeoutAdapter();
+    final timeoutDio = NetworkClient.create('https://example.test')
+      ..httpClientAdapter = _TimeoutAdapter();
     expect(
-      RemoteBlessingRepository(dio: timeoutDio).getCategories(),
+      RemoteBlessingRepository(api: BlessingApi(timeoutDio)).getCategories(),
       throwsA(
         isA<AppException>()
             .having((error) => error.message, 'message', contains('超时')),
       ),
     );
 
-    final malformedDio = Dio()
-      ..httpClientAdapter = _FixtureAdapter({'data': 'bad'});
+    final malformed = _remoteWithFixture({'data': 'bad'});
     expect(
-      RemoteBlessingRepository(dio: malformedDio).getCategories(),
+      malformed.getCategories(),
       throwsA(isA<DataFormatException>()),
     );
   });
@@ -79,6 +75,12 @@ void main() {
     expect(result.status, WechatStatus.demo);
     expect(result.message, contains('演示'));
   });
+}
+
+RemoteBlessingRepository _remoteWithFixture(Object data) {
+  final dio = NetworkClient.create('https://example.test')
+    ..httpClientAdapter = _FixtureAdapter(data);
+  return RemoteBlessingRepository(api: BlessingApi(dio));
 }
 
 class _FixtureAdapter implements HttpClientAdapter {

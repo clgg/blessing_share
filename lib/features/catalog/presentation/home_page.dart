@@ -1,5 +1,5 @@
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/app/app_theme.dart';
-import 'package:blessing_share/core/widgets/app_empty_state.dart';
 import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_category.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           key: const PageStorageKey('home-scroll'),
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+          padding: AppDimens.pagePaddingTab,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -141,17 +141,17 @@ class _GridEntry extends StatelessWidget {
     return Speakable(
       text: '朋友圈九宫格，选主题，放照片，看预览',
       child: SizedBox(
-        height: 148,
+        height: AppDimens.gridEntryHeight,
         child: Material(
           color: colors.title,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: AppDimens.radiusLgAll,
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onTap,
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(
+                const AppAssetImage(
                   'assets/images/grid.jpg',
                   fit: BoxFit.cover,
                   semanticLabel: '朋友圈九宫格',
@@ -164,7 +164,7 @@ class _GridEntry extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(AppDimens.spaceXl),
                   child: Row(
                     children: [
                       Expanded(
@@ -172,21 +172,28 @@ class _GridEntry extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              '朋友圈九宫格',
-                              style: TextStyle(
-                                color: colors.onOverlay,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700,
+                            Flexible(
+                              child: Text(
+                                '朋友圈九宫格',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.copyWith(color: colors.onOverlay),
                               ),
                             ),
-                            const SizedBox(height: 6),
-                            Text(
-                              '选主题 · 放照片 · 看预览',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(color: colors.onOverlay),
+                            const SizedBox(height: AppDimens.spaceXs + 2),
+                            Flexible(
+                              child: Text(
+                                '选主题 · 放照片 · 看预览',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(color: colors.onOverlay),
+                              ),
                             ),
                           ],
                         ),
@@ -194,7 +201,7 @@ class _GridEntry extends StatelessWidget {
                       Icon(
                         Icons.arrow_forward_rounded,
                         color: colors.onOverlay,
-                        size: 34,
+                        size: AppDimens.iconLg,
                       ),
                     ],
                   ),

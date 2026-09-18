@@ -1,6 +1,5 @@
 import 'package:blessing_share/app/app_theme.dart';
-import 'package:blessing_share/core/widgets/app_empty_state.dart';
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_repository.dart';
 import 'package:blessing_share/features/catalog/domain/grid_theme.dart';
 import 'package:blessing_share/features/grid/grid_preview_page.dart';
@@ -79,7 +78,10 @@ class _ThemeCard extends StatelessWidget {
           children: [
             SizedBox(
               height: 180,
-              child: Image.asset(theme.previewAssets.first, fit: BoxFit.cover),
+              child: AppAssetImage(
+                theme.previewAssets.first,
+                fit: BoxFit.cover,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(18),

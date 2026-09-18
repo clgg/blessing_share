@@ -1,4 +1,4 @@
-import 'package:blessing_share/core/network/app_exception.dart';
+import 'package:blessing_share/core/error/app_exception.dart';
 import 'package:blessing_share/features/update/app_update_gateway.dart';
 import 'package:blessing_share/features/update/app_update_info.dart';
 import 'package:dio/dio.dart';

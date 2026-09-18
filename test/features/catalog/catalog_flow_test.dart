@@ -75,13 +75,13 @@ void main() {
       of: find.text('早安暖心').hitTestable(),
       matching: find.byType(BlessingImageCard),
     );
-    final portraitCard = find.ancestor(
+    final landscapeCard = find.ancestor(
       of: find.text('日日安康'),
       matching: find.byType(BlessingImageCard),
     );
     expect(
-      tester.getSize(squareCard).height,
-      lessThan(tester.getSize(portraitCard).height),
+      tester.getSize(landscapeCard).height,
+      lessThan(tester.getSize(squareCard).height),
     );
 
     await tester.tap(find.text('早安暖心').hitTestable());
@@ -126,13 +126,13 @@ void main() {
     await _pumpUntilFound(tester, find.text('早安暖心').hitTestable());
     expect(find.text('时时顺心'), findsNothing);
 
-    expect(find.text('上拉加载更多'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('load-more-footer')));
+    final scrollable = find.byKey(const Key('blessing-masonry-scroll'));
+    await tester.fling(scrollable, const Offset(0, -1600), 3000);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 320));
+    await tester.pumpAndSettle();
     await _pumpUntilFound(tester, find.text('时时顺心'));
     expect(find.text('时时顺心'), findsOneWidget);
-    expect(find.text('上拉加载更多'), findsOneWidget);
   });
 
   testWidgets('分类列表上拉手势会加载更多', (tester) async {
@@ -145,7 +145,6 @@ void main() {
     await _pumpUntilFound(tester, find.text('早安暖心').hitTestable());
 
     expect(find.text('时时顺心'), findsNothing);
-    expect(find.text('上拉加载更多'), findsOneWidget);
 
     final scrollable = find.byKey(const Key('blessing-masonry-scroll'));
     await tester.fling(scrollable, const Offset(0, -1200), 3000);
@@ -156,6 +155,9 @@ void main() {
   });
 
   testWidgets('分类列表展示标签筛选并默认选中全部', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     await tester.pumpWidget(BlessingApp(repository: repository));
     await _pumpUntilFound(tester, find.text('日常问候'));
     await tester.tap(find.text('日常问候'));
@@ -168,7 +170,7 @@ void main() {
         );
 
     expect(chip('全部问候'), findsOneWidget);
-    expect(chip('早安问候'), findsOneWidget);
+    expect(chip('上午问候'), findsOneWidget);
     expect(chip('午间问候'), findsOneWidget);
     expect(chip('晚间问候'), findsOneWidget);
     expect(chip('早安'), findsNothing);
@@ -181,6 +183,9 @@ void main() {
   });
 
   testWidgets('分类标签筛选会过滤列表并重置分页', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     await tester.pumpWidget(BlessingApp(repository: repository));
     await _pumpUntilFound(tester, find.text('日常问候'));
     await tester.tap(find.text('日常问候'));
@@ -196,29 +201,28 @@ void main() {
           matching: find.text(text),
         );
 
-    expect(find.text('上拉加载更多'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('load-more-footer')));
+    final scrollable = find.byKey(const Key('blessing-masonry-scroll'));
+    await tester.fling(scrollable, const Offset(0, -1600), 3000);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 320));
+    await tester.pumpAndSettle();
     await _pumpUntilFound(tester, itemText('时时顺心'));
     expect(itemText('时时顺心'), findsOneWidget);
 
-    await tester.tap(chip('早安问候'));
+    await tester.tap(chip('上午问候'));
     await tester.pumpAndSettle();
 
-    final morningChip = tester.widget<ChoiceChip>(chip('早安问候'));
+    final morningChip = tester.widget<ChoiceChip>(chip('上午问候'));
     expect(morningChip.selected, isTrue);
     expect(itemText('早安暖心'), findsOneWidget);
     expect(itemText('午安小憩'), findsNothing);
     expect(itemText('时时顺心'), findsNothing);
-    expect(find.text('上拉加载更多'), findsNothing);
 
     await tester.tap(chip('全部问候'));
     await tester.pumpAndSettle();
     expect(itemText('早安暖心'), findsWidgets);
     expect(itemText('午安小憩'), findsOneWidget);
     expect(itemText('时时顺心'), findsNothing);
-    expect(find.text('上拉加载更多'), findsOneWidget);
   });
 
   testWidgets('不同分类使用对应的全部标签文案', (tester) async {

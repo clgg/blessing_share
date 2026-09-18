@@ -93,16 +93,14 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     await _pumpUntilFound(tester, favoriteText('早安暖心'));
 
-    expect(
-      find.descendant(
-        of: favoritesPage,
-        matching: find.text('上拉加载更多'),
-      ),
-      findsOneWidget,
+    final scrollable = find.descendant(
+      of: favoritesPage,
+      matching: find.byKey(const Key('blessing-masonry-scroll')),
     );
-    await tester.tap(find.byKey(const Key('load-more-footer')));
+    await tester.fling(scrollable, const Offset(0, -1600), 3000);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 320));
+    await tester.pumpAndSettle();
     await _pumpUntilFound(tester, favoriteText('时时顺心'));
     expect(favoriteText('时时顺心'), findsOneWidget);
   });

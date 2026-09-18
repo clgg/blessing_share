@@ -1,4 +1,4 @@
-import 'package:blessing_share/core/network/app_exception.dart';
+import 'package:blessing_share/core/error/app_exception.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_category.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_repository.dart';
@@ -23,7 +23,12 @@ class CatalogProvider extends ChangeNotifier {
   AppException? get error => _error;
 
   Future<void> loadHome() async {
-    _setLoading();
+    final showSpinner = _categories.isEmpty && _featured.isEmpty;
+    if (showSpinner) {
+      _setLoading();
+    } else {
+      _error = null;
+    }
     try {
       final results = await Future.wait([
         _repository.getCategories(),

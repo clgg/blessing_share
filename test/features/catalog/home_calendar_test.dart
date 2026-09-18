@@ -56,7 +56,7 @@ void main() {
     expect(byId['daily']!.allFilterLabel, '全部问候');
     expect(
       byId['daily']!.filters.map((f) => f.id).toList(),
-      ['早安问候', '上午问候', '午间问候', '下午问候', '晚间问候'],
+      ['上午问候', '午间问候', '下午问候', '晚间问候'],
     );
 
     expect(byId['birthday']!.allFilterLabel, '全部生日');

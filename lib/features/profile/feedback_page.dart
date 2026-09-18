@@ -1,6 +1,4 @@
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
-import 'package:blessing_share/core/widgets/app_toast.dart';
-import 'package:blessing_share/core/widgets/primary_action_button.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:flutter/material.dart';
 
 class FeedbackPage extends StatefulWidget {

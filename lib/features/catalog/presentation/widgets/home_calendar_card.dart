@@ -41,7 +41,6 @@ class HomeCalendarCard extends StatelessWidget {
               Text(
                 yearMonthLabel,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontSize: 26,
                       fontWeight: FontWeight.w700,
                       height: 1.2,
                     ),

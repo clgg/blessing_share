@@ -146,46 +146,55 @@ class _BlessingMasonryGridState extends State<BlessingMasonryGrid> {
             key: const Key('blessing-masonry-scroll'),
             controller: _controller,
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(
-              resolvedPadding.left,
-              resolvedPadding.top,
-              resolvedPadding.right,
-              showFooter ? 12 : resolvedPadding.bottom,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: resolvedPadding,
+            child: Column(
               children: [
-                for (var columnIndex = 0;
-                    columnIndex < columns.length;
-                    columnIndex++) ...[
-                  if (columnIndex > 0)
-                    SizedBox(width: widget.crossAxisSpacing),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        for (var itemIndex = 0;
-                            itemIndex < columns[columnIndex].length;
-                            itemIndex++) ...[
-                          if (itemIndex > 0)
-                            SizedBox(height: widget.mainAxisSpacing),
-                          BlessingImageCard(
-                            item: columns[columnIndex][itemIndex],
-                            favorite: widget.isFavorite?.call(
-                                  columns[columnIndex][itemIndex],
-                                ) ??
-                                false,
-                            onFavorite: widget.onFavorite == null
-                                ? null
-                                : () => widget.onFavorite!(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var columnIndex = 0;
+                        columnIndex < columns.length;
+                        columnIndex++) ...[
+                      if (columnIndex > 0)
+                        SizedBox(width: widget.crossAxisSpacing),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            for (var itemIndex = 0;
+                                itemIndex < columns[columnIndex].length;
+                                itemIndex++) ...[
+                              if (itemIndex > 0)
+                                SizedBox(height: widget.mainAxisSpacing),
+                              BlessingImageCard(
+                                item: columns[columnIndex][itemIndex],
+                                favorite: widget.isFavorite?.call(
                                       columns[columnIndex][itemIndex],
-                                    ),
-                            onTap: () => widget.onItemTap(
-                              columns[columnIndex][itemIndex],
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
+                                    ) ??
+                                    false,
+                                onFavorite: widget.onFavorite == null
+                                    ? null
+                                    : () => widget.onFavorite!(
+                                          columns[columnIndex][itemIndex],
+                                        ),
+                                onTap: () => widget.onItemTap(
+                                  columns[columnIndex][itemIndex],
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                if (showFooter) ...[
+                  const SizedBox(height: 8),
+                  _LoadMoreFooter(
+                    hasMore: widget.hasMore,
+                    isLoadingMore: widget.isLoadingMore,
+                    onRequestMore: widget.hasMore && !widget.isLoadingMore
+                        ? widget.onLoadMore
+                        : null,
                   ),
                 ],
               ],
@@ -200,24 +209,7 @@ class _BlessingMasonryGridState extends State<BlessingMasonryGrid> {
           );
         }
 
-        if (!showFooter) return list;
-
-        // Sticky footer stays tappable; scroll/overscroll still loads more.
-        return Column(
-          children: [
-            Expanded(child: list),
-            SafeArea(
-              top: false,
-              child: _LoadMoreFooter(
-                hasMore: widget.hasMore,
-                isLoadingMore: widget.isLoadingMore,
-                onRequestMore: widget.hasMore && !widget.isLoadingMore
-                    ? widget.onLoadMore
-                    : null,
-              ),
-            ),
-          ],
-        );
+        return list;
       },
     );
   }
@@ -241,7 +233,7 @@ class _LoadMoreFooter extends StatelessWidget {
         );
     if (isLoadingMore) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -257,7 +249,7 @@ class _LoadMoreFooter extends StatelessWidget {
     }
     final label = hasMore ? '上拉加载更多' : '没有更多了';
     final child = Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Center(
         child: Text(
           label,

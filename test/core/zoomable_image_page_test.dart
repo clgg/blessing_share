@@ -1,7 +1,7 @@
 import 'package:blessing_share/app/app_theme.dart';
 import 'package:blessing_share/app/blessing_app.dart';
 import 'package:blessing_share/core/tts/recording_tts_gateway.dart';
-import 'package:blessing_share/core/widgets/zoomable_image_page.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/catalog/data/local_blessing_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -1,6 +1,5 @@
 import 'package:blessing_share/app/app_theme.dart';
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
-import 'package:blessing_share/core/widgets/app_toast.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/update/app_update_info.dart';
 import 'package:blessing_share/features/update/app_update_provider.dart';
 import 'package:blessing_share/features/update/update_dialog.dart';
@@ -55,7 +54,7 @@ class AboutPage extends StatelessWidget {
           Card(
             child: ListTile(
               key: const Key('about-check-update'),
-              minTileHeight: 72,
+              minTileHeight: 68,
               leading: Icon(
                 Icons.system_update_alt_rounded,
                 color: colors.primary,

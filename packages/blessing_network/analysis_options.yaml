@@ -1,0 +1,6 @@
+# Include commonly used analysis options.
+include: package:lints/recommended.yaml
+
+analyzer:
+  exclude:
+    - '**/*.g.dart'

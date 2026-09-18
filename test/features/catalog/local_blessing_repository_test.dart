@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:blessing_share/core/network/app_exception.dart';
+import 'package:blessing_share/core/error/app_exception.dart';
 import 'package:blessing_share/features/catalog/data/local_blessing_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

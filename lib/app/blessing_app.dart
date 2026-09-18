@@ -44,15 +44,21 @@ class BlessingApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<BlessingRepository>(
+          // Default: local JSON assets. For remote:
+          // RemoteBlessingRepository.fromBaseUrl('https://api.example.com')
           create: (_) => repository ?? LocalBlessingRepository(),
         ),
         Provider<WechatGateway>(
+          lazy: true,
           create: (_) => wechatGateway ?? const DemoWechatGateway(),
         ),
         Provider<TtsGateway>(
+          // FlutterTts binds a platform channel — only create on first speak.
+          lazy: true,
           create: (_) => ttsGateway ?? FlutterTtsGateway(),
         ),
         Provider<AppUpdateGateway>(
+          lazy: true,
           create: (_) => appUpdateGateway ?? const DemoAppUpdateGateway(),
         ),
         ChangeNotifierProvider(
@@ -61,34 +67,64 @@ class BlessingApp extends StatelessWidget {
           )..loadHome(),
         ),
         ChangeNotifierProvider(
-          create: (_) => FavoritesProvider(storage: appStorage)..load(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => LikeProvider(storage: appStorage)..load(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ActivityProvider(storage: appStorage)..load(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => SessionProvider(storage: appStorage)..load(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => ThemeProvider(storage: appStorage)..load(),
         ),
         ChangeNotifierProvider(
-          create: (_) =>
-              AccessibilitySettingsProvider(storage: appStorage)..load(),
+          create: (_) {
+            final provider = FavoritesProvider(storage: appStorage);
+            _defer(provider.load);
+            return provider;
+          },
         ),
         ChangeNotifierProvider(
+          create: (_) {
+            final provider = LikeProvider(storage: appStorage);
+            _defer(provider.load);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (_) {
+            final provider = ActivityProvider(storage: appStorage);
+            _defer(provider.load);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (_) {
+            final provider = SessionProvider(storage: appStorage);
+            _defer(provider.load);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (_) {
+            final provider = AccessibilitySettingsProvider(storage: appStorage);
+            _defer(provider.load);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          lazy: true,
           create: (context) => AppUpdateProvider(
             gateway: context.read<AppUpdateGateway>(),
           ),
         ),
-        ChangeNotifierProvider(create: (_) => GridProvider()),
+        ChangeNotifierProvider(
+          lazy: true,
+          create: (_) => GridProvider(),
+        ),
       ],
       child: const _BlessingAppView(),
     );
   }
+}
+
+void _defer(Future<void> Function() task) {
+  // After the first frame so home paint is not competing with prefs reads.
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    task();
+  });
 }
 
 class _BlessingAppView extends StatelessWidget {

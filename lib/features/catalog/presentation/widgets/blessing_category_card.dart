@@ -1,3 +1,4 @@
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/app/app_theme.dart';
 import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_category.dart';
@@ -25,7 +26,7 @@ class BlessingCategoryCard extends StatelessWidget {
       hint: '长按朗读',
       excludeSemantics: true,
       child: SizedBox(
-        height: 132,
+        height: AppDimens.categoryCardHeight,
         child: LayoutBuilder(
           builder: (context, constraints) {
             final coverWidth =
@@ -34,7 +35,7 @@ class BlessingCategoryCard extends StatelessWidget {
               key: const Key('category-cover'),
               width: coverWidth,
               height: double.infinity,
-              child: Image.asset(
+              child: AppAssetImage(
                 category.coverAsset,
                 fit: BoxFit.cover,
                 semanticLabel: category.name,
@@ -47,6 +48,7 @@ class BlessingCategoryCard extends StatelessWidget {
                 imageOnRight
                     ? Icons.chevron_left_rounded
                     : Icons.chevron_right_rounded,
+                size: AppDimens.iconMd,
                 color: colors.title,
               ),
             );
@@ -61,20 +63,28 @@ class BlessingCategoryCard extends StatelessWidget {
                       ? CrossAxisAlignment.end
                       : CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      category.name,
-                      maxLines: 1,
-                      textAlign:
-                          imageOnRight ? TextAlign.right : TextAlign.left,
-                      style: Theme.of(context).textTheme.headlineSmall,
+                    Flexible(
+                      child: Text(
+                        category.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign:
+                            imageOnRight ? TextAlign.right : TextAlign.left,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: colors.title,
+                            ),
+                      ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      category.subtitle,
-                      maxLines: 2,
-                      textAlign:
-                          imageOnRight ? TextAlign.right : TextAlign.left,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    const SizedBox(height: AppDimens.spaceXs + 2),
+                    Flexible(
+                      child: Text(
+                        category.subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign:
+                            imageOnRight ? TextAlign.right : TextAlign.left,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
                     ),
                   ],
                 ),
@@ -85,7 +95,7 @@ class BlessingCategoryCard extends StatelessWidget {
               color: colors.card,
               shape: RoundedRectangleBorder(
                 side: BorderSide(color: colors.border),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: AppDimens.radiusLgAll,
               ),
               clipBehavior: Clip.antiAlias,
               child: InkWell(

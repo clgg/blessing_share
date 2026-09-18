@@ -1,6 +1,6 @@
-import 'package:blessing_share/app/app_theme.dart';
 import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:flutter/material.dart';
+import 'package:ui_common/ui_common.dart';
 
 class AppBottomNavigation extends StatelessWidget {
   const AppBottomNavigation({
@@ -33,7 +33,7 @@ class AppBottomNavigation extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 76,
+          height: AppDimens.bottomNavHeight,
           child: Row(
             children: List.generate(_items.length, (index) {
               final item = _items[index];
@@ -55,8 +55,8 @@ class AppBottomNavigation extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(item.icon, color: color, size: 28),
-                        const SizedBox(height: 4),
+                        Icon(item.icon, color: color, size: AppDimens.iconMd),
+                        const SizedBox(height: AppDimens.spaceXs),
                         Text(
                           item.label,
                           style: TextStyle(

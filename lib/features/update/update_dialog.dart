@@ -1,5 +1,5 @@
 import 'package:blessing_share/app/app_theme.dart';
-import 'package:blessing_share/core/widgets/app_toast.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/update/app_update_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

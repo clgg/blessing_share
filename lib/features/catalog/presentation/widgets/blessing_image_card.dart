@@ -1,5 +1,5 @@
 import 'package:blessing_share/app/app_theme.dart';
-import 'package:blessing_share/core/widgets/blessing_media_image.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:flutter/material.dart';

@@ -5,8 +5,10 @@ import 'package:flutter_tts/flutter_tts.dart';
 class FlutterTtsGateway implements TtsGateway {
   FlutterTtsGateway();
 
-  final FlutterTts _tts = FlutterTts();
+  FlutterTts? _tts;
   Future<void>? _ready;
+
+  FlutterTts get _engine => _tts ??= FlutterTts();
 
   Future<void> _ensureReady() {
     return _ready ??= _configure().catchError((Object error, StackTrace stack) {
@@ -17,12 +19,13 @@ class FlutterTtsGateway implements TtsGateway {
   }
 
   Future<void> _configure() async {
+    final tts = _engine;
     final isIos = !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
     if (isIos) {
       // Shared instance + playback category: TTS still audibles with Silent switch on.
-      await _tts.setSharedInstance(true);
-      await _tts.setIosAudioCategory(
+      await tts.setSharedInstance(true);
+      await tts.setIosAudioCategory(
         IosTextToSpeechAudioCategory.playback,
         const [
           IosTextToSpeechAudioCategoryOptions.allowBluetooth,
@@ -35,9 +38,9 @@ class FlutterTtsGateway implements TtsGateway {
 
     await _setPreferredChineseLanguage();
     // Slightly slower speech helps older users follow along.
-    await _tts.setSpeechRate(isIos ? 0.45 : 0.42);
-    await _tts.setVolume(1.0);
-    await _tts.setPitch(1.0);
+    await tts.setSpeechRate(isIos ? 0.45 : 0.42);
+    await tts.setVolume(1.0);
+    await tts.setPitch(1.0);
   }
 
   Future<void> _setPreferredChineseLanguage() async {
@@ -52,20 +55,20 @@ class FlutterTtsGateway implements TtsGateway {
 
     for (final language in candidates) {
       if (await _isAvailable(language)) {
-        await _tts.setLanguage(language);
+        await _engine.setLanguage(language);
         return;
       }
     }
 
     // Fall back to any installed Chinese voice the engine reports.
     try {
-      final languages = await _tts.getLanguages;
+      final languages = await _engine.getLanguages;
       if (languages is Iterable) {
         for (final raw in languages) {
           final language = raw.toString();
           final normalized = language.toLowerCase();
           if (normalized.startsWith('zh') || normalized.startsWith('cmn')) {
-            await _tts.setLanguage(language);
+            await _engine.setLanguage(language);
             return;
           }
         }
@@ -75,12 +78,12 @@ class FlutterTtsGateway implements TtsGateway {
     }
 
     // Last resort — some devices still speak with the system default voice.
-    await _tts.setLanguage('zh-CN');
+    await _engine.setLanguage('zh-CN');
   }
 
   Future<bool> _isAvailable(String language) async {
     try {
-      final result = await _tts.isLanguageAvailable(language);
+      final result = await _engine.isLanguageAvailable(language);
       return result == true || result == 1;
     } catch (_) {
       return false;
@@ -93,8 +96,8 @@ class FlutterTtsGateway implements TtsGateway {
     if (value.isEmpty) return false;
     try {
       await _ensureReady();
-      await _tts.stop();
-      final result = await _tts.speak(value);
+      await _engine.stop();
+      final result = await _engine.speak(value);
       return result == 1 || result == true;
     } catch (error, stackTrace) {
       debugPrint('TTS 朗读失败: $error\n$stackTrace');
@@ -105,7 +108,7 @@ class FlutterTtsGateway implements TtsGateway {
   @override
   Future<void> stop() async {
     try {
-      await _tts.stop();
+      await _tts?.stop();
     } catch (_) {}
   }
 }

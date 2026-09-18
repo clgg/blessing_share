@@ -1,12 +1,7 @@
 import 'package:blessing_share/app/app_theme.dart';
-import 'package:blessing_share/core/widgets/app_empty_state.dart';
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
-import 'package:blessing_share/core/widgets/app_toast.dart';
-import 'package:blessing_share/core/widgets/blessing_media_image.dart';
-import 'package:blessing_share/core/widgets/primary_action_button.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:blessing_share/core/widgets/wechat_share_icons.dart';
-import 'package:blessing_share/core/widgets/zoomable_image_page.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/catalog/presentation/catalog_provider.dart';
 import 'package:blessing_share/features/favorites/favorites_provider.dart';
@@ -93,6 +88,7 @@ class _DetailContent extends StatelessWidget {
                   networkUrl: item.imageUrl,
                   fit: BoxFit.cover,
                   semanticLabel: item.title,
+                  filterQuality: FilterQuality.high,
                 ),
               ),
             ),
@@ -105,6 +101,8 @@ class _DetailContent extends StatelessWidget {
                   text: item.title,
                   child: Text(
                     item.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
@@ -158,20 +156,22 @@ class _DetailContent extends StatelessWidget {
             onPressed: () => _share(context, ShareTarget.friend),
           ),
           const SizedBox(height: 12),
-          OutlinedButton.icon(
-            onPressed: () => _share(context, ShareTarget.timeline),
-            icon: const MomentsIcon(size: 24),
-            label: const Text('分享到朋友圈'),
-            style: OutlinedButton.styleFrom(
-                minimumSize: const Size.fromHeight(56)),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _share(context, ShareTarget.timeline),
+              icon: const MomentsIcon(size: 24),
+              label: const Text('分享到朋友圈'),
+            ),
           ),
           const SizedBox(height: 12),
-          OutlinedButton.icon(
-            onPressed: () => _save(context),
-            icon: const Icon(Icons.download_outlined),
-            label: const Text('保存到相册'),
-            style: OutlinedButton.styleFrom(
-                minimumSize: const Size.fromHeight(56)),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _save(context),
+              icon: const Icon(Icons.download_outlined),
+              label: const Text('保存到相册'),
+            ),
           ),
           const SizedBox(height: 16),
           Speakable(

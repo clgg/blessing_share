@@ -1,6 +1,6 @@
 import 'package:blessing_share/app/app_theme.dart';
 import 'package:blessing_share/app/theme_provider.dart';
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/profile/accessibility_settings_provider.dart';
 import 'package:blessing_share/features/profile/theme_settings_page.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class SettingsPage extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 10),
             child: ListTile(
               key: const Key('settings-theme-style'),
-              minTileHeight: 72,
+              minTileHeight: 68,
               leading: Icon(
                 Icons.palette_outlined,
                 color: colors.primary,

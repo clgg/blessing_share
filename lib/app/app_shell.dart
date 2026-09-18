@@ -1,4 +1,5 @@
 import 'package:blessing_share/core/widgets/app_bottom_navigation.dart';
+import 'package:blessing_share/core/widgets/lazy_indexed_stack.dart';
 import 'package:blessing_share/features/catalog/presentation/home_page.dart';
 import 'package:blessing_share/features/favorites/favorites_page.dart';
 import 'package:blessing_share/features/grid/grid_theme_page.dart';
@@ -20,13 +21,14 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
+      body: LazyIndexedStack(
         index: _currentIndex,
-        children: [
-          HomePage(onOpenGrid: _openGrid),
-          FavoritesPage(onGoHome: () => _selectTab(0)),
-          const ProfilePage(),
-        ],
+        itemCount: 3,
+        itemBuilder: (context, index) => switch (index) {
+          0 => HomePage(onOpenGrid: _openGrid),
+          1 => FavoritesPage(onGoHome: () => _selectTab(0)),
+          _ => const ProfilePage(),
+        },
       ),
       bottomNavigationBar: AppBottomNavigation(
         currentIndex: _currentIndex,

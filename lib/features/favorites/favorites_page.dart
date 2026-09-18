@@ -1,5 +1,4 @@
-import 'package:blessing_share/core/widgets/app_empty_state.dart';
-import 'package:blessing_share/core/widgets/app_toast.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_repository.dart';
@@ -110,7 +109,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 22, 16, 0),
+        padding: AppDimens.pagePaddingTab.copyWith(bottom: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

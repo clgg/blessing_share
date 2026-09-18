@@ -30,6 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  blessing_network:
+    path: packages/blessing_network
+  ui_common:
+    path: packages/ui_common
   dio: ^5.7.0
   provider: ^6.1.2
   shared_preferences: ^2.3.2

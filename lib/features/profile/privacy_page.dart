@@ -1,4 +1,4 @@
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:flutter/material.dart';
 
 class PrivacyPage extends StatelessWidget {

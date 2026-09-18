@@ -1,6 +1,6 @@
 import 'package:blessing_share/app/app_shell.dart';
 import 'package:blessing_share/app/blessing_app.dart';
-import 'package:blessing_share/core/widgets/app_toast.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/catalog/data/local_blessing_repository.dart';
 import 'package:blessing_share/features/favorites/favorites_page.dart';
 import 'package:blessing_share/features/profile/activity_provider.dart';

@@ -51,13 +51,17 @@ class _ShareAssetIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final px = (size * MediaQuery.devicePixelRatioOf(context)).ceil();
     return Image.asset(
       asset,
       width: size,
       height: size,
       fit: BoxFit.contain,
+      cacheWidth: px,
+      cacheHeight: px,
       filterQuality: FilterQuality.medium,
       semanticLabel: semanticLabel,
+      gaplessPlayback: true,
     );
   }
 }

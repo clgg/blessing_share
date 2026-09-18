@@ -1,5 +1,5 @@
 import 'package:blessing_share/core/tts/tts_gateway.dart';
-import 'package:blessing_share/core/widgets/app_toast.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/profile/accessibility_settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -1,8 +1,5 @@
 import 'package:blessing_share/app/app_theme.dart';
-import 'package:blessing_share/core/widgets/app_empty_state.dart';
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
-import 'package:blessing_share/core/widgets/app_toast.dart';
-import 'package:blessing_share/core/widgets/primary_action_button.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/catalog/domain/grid_theme.dart';
 import 'package:blessing_share/features/grid/grid_guide_page.dart';
 import 'package:blessing_share/features/grid/grid_provider.dart';
@@ -114,7 +111,7 @@ class _GridCell extends StatelessWidget {
       key: isCenter ? const Key('grid-cell-5-user-photo') : null,
       fit: StackFit.expand,
       children: [
-        Image.asset(asset, fit: BoxFit.cover),
+        AppAssetImage(asset, fit: BoxFit.cover),
         Positioned(
           left: 5,
           top: 5,

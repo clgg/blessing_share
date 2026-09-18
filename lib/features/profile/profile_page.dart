@@ -1,3 +1,4 @@
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/app/app_theme.dart';
 import 'package:blessing_share/core/widgets/speakable.dart';
 import 'package:blessing_share/features/likes/likes_page.dart';
@@ -23,7 +24,7 @@ class ProfilePage extends StatelessWidget {
     final colors = context.blessingColors;
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 22, 16, 32),
+        padding: AppDimens.pagePaddingTab,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -61,10 +62,22 @@ class ProfilePage extends StatelessWidget {
                   padding: const EdgeInsets.all(18),
                   child: Row(
                     children: [
-                      const CircleAvatar(
-                        radius: 31,
-                        backgroundImage:
-                            AssetImage('assets/images/placeholder_person.jpg'),
+                      Builder(
+                        builder: (context) {
+                          final px = (62 *
+                                  MediaQuery.devicePixelRatioOf(context))
+                              .ceil();
+                          return CircleAvatar(
+                            radius: 31,
+                            backgroundImage: ResizeImage(
+                              const AssetImage(
+                                'assets/images/placeholder_person.jpg',
+                              ),
+                              width: px,
+                              height: px,
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(width: 14),
                       Expanded(

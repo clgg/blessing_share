@@ -1,8 +1,7 @@
-import 'package:blessing_share/core/network/app_exception.dart';
-import 'package:blessing_share/core/network/api_client.dart';
+import 'package:blessing_network/blessing_network.dart';
+import 'package:blessing_share/core/error/app_exception.dart';
 import 'package:blessing_share/features/update/app_update_gateway.dart';
 import 'package:blessing_share/features/update/app_update_info.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class AppUpdateProvider extends ChangeNotifier {
@@ -86,7 +85,7 @@ class AppUpdateProvider extends ChangeNotifier {
         _lastError = null;
         return null;
       }
-      _lastError = ApiClient.mapDioException(error).message;
+      _lastError = NetworkFailureMapper.fromDio(error).message;
       return null;
     } catch (error, stackTrace) {
       debugPrint('下载更新失败: $error\n$stackTrace');

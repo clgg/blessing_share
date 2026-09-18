@@ -1,5 +1,4 @@
-import 'package:blessing_share/core/widgets/app_empty_state.dart';
-import 'package:blessing_share/core/widgets/app_scaffold.dart';
+import 'package:ui_common/ui_common.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_category.dart';
 import 'package:blessing_share/features/catalog/domain/blessing_item.dart';
 import 'package:blessing_share/features/catalog/domain/category_filter.dart';

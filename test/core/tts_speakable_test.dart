@@ -32,7 +32,7 @@ void main() {
     await tester.longPress(find.text('日常问候'));
     await tester.pump();
     expect(tts.spoken.single, contains('日常问候'));
-    expect(tts.spoken.single, contains('早安'));
+    expect(tts.spoken.single, contains('上午'));
   });
 
   testWidgets('长按图片卡片朗读标题与说明', (tester) async {
