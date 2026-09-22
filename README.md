@@ -2,28 +2,39 @@
 
 基于需求文档和 UI 规范实现的 Flutter Android 高保真框架演示版。应用默认离线运行，使用本地 JSON 与压缩后的演示图片，可完整点击三栏导航、素材浏览、收藏、演示分享/保存历史、个人中心和朋友圈九宫格流程。
 
+## 文档
+
+开发相关文档统一在 [`docs/development/`](docs/development/)：
+
+- [功能与技术总览](docs/development/development-guide.md)
+- [UI 开发规范](docs/development/ui-development-guide.md)
+- [网络 Package](docs/development/network-package.md)
+- [微信分享接入](docs/development/wechat-integration.md)
+
 ## 工程信息
 
 - Android 包名：`com.clg.blessing_share`
 - 应用名称：祝福素材分享
-- Flutter：3.22.1
+- Flutter：3.22.x（SDK ≥3.4）
 - 状态管理：Provider
-- 网络预留：Dio
 - 本地持久化：SharedPreferences
-- 当前验证使用的 Flutter 命令：`/private/tmp/flutter-3.22.1/bin/flutter`
+- 网络预留：`packages/blessing_network`（Dio + Retrofit）
+- 公用 UI：`packages/ui_common`
 
 ## 运行与构建
 
 ```bash
-/private/tmp/flutter-3.22.1/bin/flutter pub get
-/private/tmp/flutter-3.22.1/bin/flutter test
-/private/tmp/flutter-3.22.1/bin/flutter run
-/private/tmp/flutter-3.22.1/bin/flutter build apk --debug
+flutter pub get
+flutter test
+flutter run
+flutter build apk --debug
 ```
 
 调试 APK 输出到：
 
 `build/app/outputs/flutter-apk/app-debug.apk`
+
+> Debug 默认仅包含 `arm64-v8a`（见 `android/app/build.gradle`），以减小包体。
 
 ## 演示范围
 
@@ -43,8 +54,8 @@
 - 本地演示数据：`assets/data/blessings.json`
 - 压缩演示图片：`assets/images/`
 - 本地 Repository：`lib/features/catalog/data/local_blessing_repository.dart`
-- 网络包：`packages/blessing_network/`（见 `docs/architecture/network-package.md`）
-- 公用 UI：`packages/ui_common/`（`AppDimens` / `BlessingPalette` / Scaffold、按钮、空态、Toast 等）
+- 网络包：`packages/blessing_network/`（见 `docs/development/network-package.md`）
+- 公用 UI：`packages/ui_common/`
 - 远程 Repository：`lib/features/catalog/data/remote_blessing_repository.dart`
 - 微信接口：`lib/features/wechat/wechat_gateway.dart`
 - 当前演示实现：`lib/features/wechat/demo_wechat_gateway.dart`

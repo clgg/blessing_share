@@ -34,9 +34,12 @@ dependencies:
     path: packages/blessing_network
   ui_common:
     path: packages/ui_common
+  wechat_open_share:
+    path: packages/wechat_open_share
   dio: ^5.7.0
   provider: ^6.1.2
   shared_preferences: ^2.3.2
+  path_provider: ^2.1.4
   # 4.2.x needs Kotlin 2.2 / minSdk 24 / compileSdk 36; pin for Flutter 3.22 toolchain.
   flutter_tts: 4.0.2
 

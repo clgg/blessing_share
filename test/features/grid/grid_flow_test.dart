@@ -1,6 +1,7 @@
 import 'package:blessing_share/app/blessing_app.dart';
 import 'package:blessing_share/app/app_shell.dart';
 import 'package:blessing_share/features/catalog/data/local_blessing_repository.dart';
+import 'package:blessing_share/features/grid/grid_preview_page.dart';
 import 'package:blessing_share/features/profile/activity_provider.dart';
 import 'package:blessing_share/features/profile/domain/activity_record.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,9 @@ void main() {
     await _openGridPreview(tester);
 
     expect(find.byKey(const Key('grid-cell-5-user-photo')), findsOneWidget);
+    final grid = find.byType(GridPreviewPage);
     for (var index = 1; index <= 9; index++) {
-      expect(find.text('$index'), findsOneWidget);
+      expect(find.descendant(of: grid, matching: find.text('$index')), findsOneWidget);
     }
   });
 

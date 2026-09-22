@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-files-path name="wechat_share_pictures" path="Pictures/" />
+    <cache-path name="wechat_share_cache" path="." />
+    <files-path name="wechat_share_files" path="." />
+    <external-cache-path name="wechat_share_ext_cache" path="." />
+</paths>

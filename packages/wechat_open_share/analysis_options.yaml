@@ -1,0 +1,2 @@
+# Include commonly used analysis options.
+include: package:flutter_lints/flutter.yaml

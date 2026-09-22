@@ -1,0 +1,27 @@
+name: wechat_open_share
+description: Flutter plugin bridging official WeChat OpenSDK for image/text/webpage share (Android + iOS).
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.22.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.clg.wechat_open_share
+        pluginClass: WechatOpenSharePlugin
+      ios:
+        pluginClass: WechatOpenSharePlugin
